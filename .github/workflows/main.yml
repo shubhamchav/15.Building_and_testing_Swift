@@ -1,34 +1,30 @@
-name: Swift CI
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+# GitHub recommends pinning actions to a commit SHA.
+# To get a newer version, you will need to update the SHA.
+# You can also reference a tag or branch, but the action may change without warning.
+
+name: Swift
+
+on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    name: Swift ${{ matrix.swift }} on ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        swift: ["5.2", "5.3"]
+    runs-on: ${{ matrix.os }}
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Setup Swift
-      uses: SwiftActions/setup-swift@v2
-      with:
-        swift-version: '5.5'
-
-    - name: Install dependencies
-      run: |
-        swift package resolve
-
-    - name: Build
-      run: |
-        swift build
-
-    - name: Test
-      run: |
-        swift test
+      - uses: swift-actions/setup-swift@65540b95f51493d65f5e59e97dcef9629ddf11bf
+        with:
+          swift-version: ${{ matrix.swift }}
+      - uses: actions/checkout@v4
+      - name: Build
+        run: swift build
+      - name: Run tests
+        run: swift test
