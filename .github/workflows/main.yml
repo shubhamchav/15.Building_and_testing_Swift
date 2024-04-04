@@ -1,4 +1,4 @@
-Enter file contents herename: Swift CI
+name: Swift CI
 
 on:
   push:
